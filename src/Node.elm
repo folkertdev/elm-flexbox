@@ -1,4 +1,4 @@
-module Node exposing (Node)
+module Node exposing (ComputeResult, Display(..), FlexWrap(..), LayoutCache, LayoutNode(..), Node(..), Point, PositionType(..), align, crossMarginEnd, crossMarginStart, crossSize, default, mainMarginEnd, mainMarginStart)
 
 import AlignContent exposing (AlignContent)
 import AlignItems exposing (AlignItems)
@@ -62,10 +62,14 @@ type alias Point a =
     { x : a, y : a }
 
 
-{-| TODO implement this
--}
+type LayoutNode
+    = LayoutNode { order : Int, size : Size Float, location : Point Float, children : List LayoutNode }
+
+
 type alias ComputeResult =
-    ()
+    { size : Size Float
+    , children : List LayoutNode
+    }
 
 
 type alias LayoutCache =
@@ -107,3 +111,122 @@ type Node
 
 type alias Number =
     Maybe Float
+
+
+defaultRectangleDimension =
+    { start = Dimension.Undefined
+    , end = Dimension.Undefined
+    , top = Dimension.Undefined
+    , bottom = Dimension.Undefined
+    }
+
+
+defaultSizeDimension =
+    { width = Dimension.Auto, height = Dimension.Auto }
+
+
+default : Node
+default =
+    Node
+        { display = defaultDisplay
+        , position_type = defaultPositionType
+        , direction = defaultDirection
+        , flex_direction = FlexDirection.default
+        , flex_wrap = defaultFlexWrap
+        , overflow = defaultOverflow
+        , align_items = AlignItems.default
+        , align_self = AlignSelf.default
+        , align_content = AlignContent.default
+        , justify_content = JustifyContent.default
+        , position = defaultRectangleDimension
+        , margin = defaultRectangleDimension
+        , padding = defaultRectangleDimension
+        , border = defaultRectangleDimension
+        , flex_grow = 0
+        , flex_shrink = 1
+        , flex_basis = Dimension.default
+        , size = defaultSizeDimension
+        , min_size = defaultSizeDimension
+        , max_size = defaultSizeDimension
+
+        -- v check that
+        , aspect_ratio = Nothing
+        , measure = Nothing
+        , children = []
+        , layout_cache = Nothing
+        }
+
+
+align : { node : Node, parent : Node } -> AlignSelf
+align r =
+    let
+        (Node node) =
+            r.node
+
+        (Node parent) =
+            r.parent
+    in
+    if node.align_self == AlignSelf.Auto then
+        case parent.align_items of
+            AlignItems.FlexStart ->
+                AlignSelf.FlexStart
+
+            AlignItems.FlexEnd ->
+                AlignSelf.FlexEnd
+
+            AlignItems.Center ->
+                AlignSelf.Center
+
+            AlignItems.Baseline ->
+                AlignSelf.Baseline
+
+            AlignItems.Stretch ->
+                AlignSelf.Stretch
+
+    else
+        node.align_self
+
+
+crossMarginStart : FlexDirection -> Node -> Dimension
+crossMarginStart direction (Node node) =
+    if FlexDirection.isRow direction then
+        node.margin.top
+
+    else
+        node.margin.bottom
+
+
+crossMarginEnd : FlexDirection -> Node -> Dimension
+crossMarginEnd direction (Node node) =
+    if FlexDirection.isRow direction then
+        node.margin.bottom
+
+    else
+        node.margin.top
+
+
+crossSize : FlexDirection -> Node -> Dimension
+crossSize direction (Node node) =
+    if FlexDirection.isRow direction then
+        node.size.height
+
+    else
+        node.size.width
+
+
+mainMarginStart : FlexDirection -> Node -> Dimension
+mainMarginStart direction (Node node) =
+    if FlexDirection.isRow direction then
+        node.margin.start
+
+    else
+        node.margin.top
+
+
+mainMarginEnd : FlexDirection -> Node -> Dimension
+mainMarginEnd direction (Node node) =
+    if FlexDirection.isRow direction then
+        node.margin.end
+
+    else
+        node.margin.bottom

@@ -1,4 +1,4 @@
-module Rectangle exposing (Rectangle)
+module Rectangle exposing (Rectangle, crossAxis, crossAxisEnd, crossAxisStart, horizontal, mainAxis, mainAxisEnd, mainAxisNumber, mainAxisStart, map, vertical)
 
 import FlexDirection
 
@@ -26,6 +26,20 @@ vertical rectangle =
     rectangle.top + rectangle.bottom
 
 
+type alias Number =
+    Maybe Float
+
+
+horizontalNumber : Rectangle Number -> Number
+horizontalNumber rectangle =
+    Maybe.map2 (+) rectangle.start rectangle.end
+
+
+verticalNumber : Rectangle Number -> Number
+verticalNumber rectangle =
+    Maybe.map2 (+) rectangle.top rectangle.bottom
+
+
 mainAxis : FlexDirection.FlexDirection -> Rectangle number -> number
 mainAxis direction rectangle =
     if FlexDirection.isRow direction then
@@ -33,6 +47,15 @@ mainAxis direction rectangle =
 
     else
         vertical rectangle
+
+
+mainAxisNumber : FlexDirection.FlexDirection -> Rectangle Number -> Number
+mainAxisNumber direction rectangle =
+    if FlexDirection.isRow direction then
+        horizontalNumber rectangle
+
+    else
+        verticalNumber rectangle
 
 
 crossAxis : FlexDirection.FlexDirection -> Rectangle number -> number
@@ -44,7 +67,7 @@ crossAxis direction rectangle =
         horizontal rectangle
 
 
-mainAxisStart : FlexDirection.FlexDirection -> Rectangle number -> number
+mainAxisStart : FlexDirection.FlexDirection -> Rectangle a -> a
 mainAxisStart direction rectangle =
     if FlexDirection.isRow direction then
         rectangle.start
@@ -53,7 +76,7 @@ mainAxisStart direction rectangle =
         rectangle.top
 
 
-mainAxisEnd : FlexDirection.FlexDirection -> Rectangle number -> number
+mainAxisEnd : FlexDirection.FlexDirection -> Rectangle a -> a
 mainAxisEnd direction rectangle =
     if FlexDirection.isRow direction then
         rectangle.end
@@ -62,7 +85,7 @@ mainAxisEnd direction rectangle =
         rectangle.bottom
 
 
-crossAxisStart : FlexDirection.FlexDirection -> Rectangle number -> number
+crossAxisStart : FlexDirection.FlexDirection -> Rectangle a -> a
 crossAxisStart direction rectangle =
     if FlexDirection.isRow direction then
         rectangle.top
@@ -71,7 +94,7 @@ crossAxisStart direction rectangle =
         rectangle.start
 
 
-crossAxisEnd : FlexDirection.FlexDirection -> Rectangle number -> number
+crossAxisEnd : FlexDirection.FlexDirection -> Rectangle a -> a
 crossAxisEnd direction rectangle =
     if FlexDirection.isRow direction then
         rectangle.bottom

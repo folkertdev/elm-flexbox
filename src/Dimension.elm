@@ -1,4 +1,4 @@
-module Dimension exposing (Dimension(..), default, resolve)
+module Dimension exposing (Dimension(..), default, isDefined, resolve, resolveNumber)
 
 
 type Dimension
@@ -12,6 +12,21 @@ default =
     Undefined
 
 
+type alias Number =
+    Maybe Float
+
+
+resolveNumber : Number -> Dimension -> Maybe Float
+resolveNumber maybeParentWidth dimension =
+    case maybeParentWidth of
+        Just parentWidth ->
+            resolve parentWidth dimension
+
+        Nothing ->
+            Nothing
+
+
+resolve : Float -> Dimension -> Maybe Float
 resolve parentWidth dimension =
     case dimension of
         Points points ->
