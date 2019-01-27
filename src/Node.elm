@@ -1,4 +1,24 @@
-module Node exposing (ComputeResult, Display(..), FlexWrap(..), LayoutCache, LayoutNode(..), Node(..), Point, PositionType(..), align, crossMarginEnd, crossMarginStart, crossSize, default, mainMarginEnd, mainMarginStart)
+module Node exposing
+    ( ComputeResult
+    , Display(..)
+    , FlexWrap(..)
+    , LayoutCache
+    , LayoutNode(..)
+    , Node(..)
+    , Point
+    , PositionType(..)
+    , align
+    , crossMarginEnd
+    , crossMarginStart
+    , crossSize
+    , default
+    , mainMarginEnd
+    , mainMarginStart
+    , maxCrossSize
+    , maxMainSize
+    , minCrossSize
+    , minMainSize
+    )
 
 import AlignContent exposing (AlignContent)
 import AlignItems exposing (AlignItems)
@@ -230,3 +250,39 @@ mainMarginEnd direction (Node node) =
 
     else
         node.margin.bottom
+
+
+minMainSize : FlexDirection -> Node -> Dimension
+minMainSize direction (Node node) =
+    if FlexDirection.isRow direction then
+        node.min_size.width
+
+    else
+        node.min_size.height
+
+
+maxMainSize : FlexDirection -> Node -> Dimension
+maxMainSize direction (Node node) =
+    if FlexDirection.isRow direction then
+        node.max_size.width
+
+    else
+        node.max_size.height
+
+
+minCrossSize : FlexDirection -> Node -> Dimension
+minCrossSize direction (Node node) =
+    if FlexDirection.isRow direction then
+        node.min_size.height
+
+    else
+        node.min_size.width
+
+
+maxCrossSize : FlexDirection -> Node -> Dimension
+maxCrossSize direction (Node node) =
+    if FlexDirection.isRow direction then
+        node.max_size.height
+
+    else
+        node.max_size.width

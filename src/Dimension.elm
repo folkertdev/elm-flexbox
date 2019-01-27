@@ -18,11 +18,14 @@ type alias Number =
 
 resolveNumber : Number -> Dimension -> Maybe Float
 resolveNumber maybeParentWidth dimension =
-    case maybeParentWidth of
-        Just parentWidth ->
-            resolve parentWidth dimension
+    case dimension of
+        Points points ->
+            Just points
 
-        Nothing ->
+        Percent percent ->
+            Maybe.map (\parentWidth -> parentWidth * percent) maybeParentWidth
+
+        _ ->
             Nothing
 
 

@@ -1,5 +1,6 @@
-module Size exposing (Size, crossAxis, mainAxis, map, setCrossAxis, setMainAxis, undefined)
+module Size exposing (Size, crossAxis, default, mainAxis, map, setCrossAxis, setMainAxis, undefined)
 
+import Dimension exposing (Dimension(..))
 import FlexDirection exposing (FlexDirection)
 
 
@@ -10,6 +11,11 @@ type alias Size a =
 undefined : Size (Maybe a)
 undefined =
     { width = Nothing, height = Nothing }
+
+
+default : Size Dimension
+default =
+    Size Auto Auto
 
 
 map : (a -> b) -> Size a -> Size b
